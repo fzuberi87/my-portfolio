@@ -1,87 +1,85 @@
 import { Client } from "@notionhq/client";
-import { NotionToMarkdown } from "notion-to-md";
-import type { Project } from "@/types/notion";
+import type { CaseStudy, NotionBlock } from "@/types/notion";
 
 const notion = new Client({ auth: process.env.NOTION_SECRET });
 const DATABASE_ID = process.env.NOTION_DATABASE_ID!;
 
-const n2m = new NotionToMarkdown({ notionClient: notion });
+// ---------------------------------------------------------------------------
+// Slug helpers
+// ---------------------------------------------------------------------------
 
-const isConfigured = !!process.env.NOTION_SECRET && !!process.env.NOTION_DATABASE_ID;
+function toSlug(title: string): string {
+  return title
+    .toLowerCase()
+    .replace(/[^a-z0-9\s-]/g, "")
+    .replace(/\s+/g, "-")
+    .replace(/-+/g, "-")
+    .trim();
+}
 
-// Returns raw Notion page results for the Published database entries.
-export async function getCaseStudies() {
+// ---------------------------------------------------------------------------
+// Database queries
+// ---------------------------------------------------------------------------
+
+export async function getCaseStudies(): Promise<CaseStudy[]> {
   const response = await notion.databases.query({
     database_id: DATABASE_ID,
     filter: { property: "Status", select: { equals: "Published" } },
+    sorts: [{ property: "Year", direction: "descending" }],
   });
-  return response.results;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  return (response.results as any[]).map(formatCaseStudy);
 }
 
-// Returns formatted Project objects, sorted by Year descending.
-export async function getPublishedProjects(): Promise<Project[]> {
-  if (!isConfigured) return [];
-  try {
-    const response = await notion.databases.query({
-      database_id: DATABASE_ID,
-      filter: { property: "Status", select: { equals: "Published" } },
-      sorts: [{ property: "Year", direction: "descending" }],
+export async function getCaseStudyBySlug(slug: string): Promise<CaseStudy | null> {
+  const all = await getCaseStudies();
+  return all.find((cs) => cs.slug === slug) ?? null;
+}
+
+export async function getAllSlugs(): Promise<{ slug: string }[]> {
+  const studies = await getCaseStudies();
+  return studies.map((s) => ({ slug: s.slug }));
+}
+
+// ---------------------------------------------------------------------------
+// Block content
+// ---------------------------------------------------------------------------
+
+export async function getCaseStudyBlocks(pageId: string): Promise<NotionBlock[]> {
+  const blocks: NotionBlock[] = [];
+  let cursor: string | undefined;
+
+  do {
+    const res = await notion.blocks.children.list({
+      block_id: pageId,
+      start_cursor: cursor,
+      page_size: 100,
     });
-    return response.results.map(formatProject);
-  } catch (err) {
-    console.error("[Notion] getPublishedProjects failed:", (err as Error).message);
-    return [];
-  }
+    blocks.push(...(res.results as NotionBlock[]));
+    cursor = res.has_more ? (res.next_cursor ?? undefined) : undefined;
+  } while (cursor);
+
+  return blocks;
 }
 
-export async function getProjectBySlug(slug: string): Promise<Project | null> {
-  if (!isConfigured) return null;
-  try {
-    const response = await notion.databases.query({
-      database_id: DATABASE_ID,
-      filter: { property: "Slug", rich_text: { equals: slug } },
-    });
-    if (!response.results.length) return null;
-    return formatProject(response.results[0]);
-  } catch (err) {
-    console.error("[Notion] getProjectBySlug failed:", (err as Error).message);
-    return null;
-  }
-}
-
-export async function getProjectContent(pageId: string): Promise<string> {
-  if (!isConfigured) return "";
-  try {
-    const mdBlocks = await n2m.pageToMarkdown(pageId);
-    const mdString = n2m.toMarkdownString(mdBlocks);
-    return mdString.parent ?? "";
-  } catch (err) {
-    console.error("[Notion] getProjectContent failed:", (err as Error).message);
-    return "";
-  }
-}
-
-export async function getAllProjectSlugs(): Promise<{ slug: string }[]> {
-  const projects = await getPublishedProjects();
-  return projects.map((p) => ({ slug: p.slug }));
-}
+// ---------------------------------------------------------------------------
+// Formatter
+// ---------------------------------------------------------------------------
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-function formatProject(page: any): Project {
+function formatCaseStudy(page: any): CaseStudy {
   const props = page.properties;
+  const title: string = props.Name?.title?.[0]?.plain_text ?? "Untitled";
+
   return {
     id: page.id,
-    title: props.Name?.title?.[0]?.plain_text ?? "Untitled",
-    slug: props.Slug?.rich_text?.[0]?.plain_text ?? page.id,
-    description: props.Description?.rich_text?.[0]?.plain_text ?? "",
-    cover:
-      page.cover?.external?.url ??
-      page.cover?.file?.url ??
-      props.Cover?.url ??
-      "",
-    tags: props.Tags?.multi_select?.map((t: { name: string }) => t.name) ?? [],
-    year: props.Year?.number ?? new Date().getFullYear(),
+    slug: toSlug(title),
+    title,
+    company: props.Company?.rich_text?.[0]?.plain_text ?? "",
     role: props.Role?.rich_text?.[0]?.plain_text ?? "",
-    featured: props.Featured?.checkbox ?? false,
+    industry: props.Industry?.select?.name ?? "",
+    skills: props.Skills?.multi_select?.map((s: { name: string }) => s.name) ?? [],
+    year: props.Year?.number ?? new Date().getFullYear(),
+    cover: page.cover?.external?.url ?? page.cover?.file?.url ?? "",
   };
 }

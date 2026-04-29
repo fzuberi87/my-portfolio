@@ -18,7 +18,7 @@ export function Header() {
   useEffect(() => setMenuOpen(false), [pathname]);
 
   const navLinks = [
-    { href: '/', label: 'Work' },
+    { href: '/', label: 'Case Studies' },
     { href: '/about', label: 'About' },
   ];
 

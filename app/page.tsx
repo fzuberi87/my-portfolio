@@ -1,59 +1,65 @@
-import { getPublishedProjects } from '@/lib/notion';
-import { BentoGrid } from '@/components/BentoGrid';
-import { AnimatedSection } from '@/components/AnimatedSection';
+import { getCaseStudies } from "@/lib/notion";
+import { CaseStudyCard } from "@/components/CaseStudyCard";
+import { AnimatedSection } from "@/components/AnimatedSection";
+import type { Metadata } from "next";
 
-export const revalidate = 3600;
+export const revalidate = 60;
 
-export default async function HomePage() {
-  const projects = await getPublishedProjects();
+export const metadata: Metadata = {
+  title: "Case Studies",
+  description:
+    "UX design case studies spanning product design, research, and design systems.",
+};
+
+export default async function GalleryPage() {
+  const studies = await getCaseStudies();
 
   return (
     <div className="min-h-screen">
       {/* ── Hero ── */}
-      <section className="pt-36 pb-20 px-6 max-w-7xl mx-auto">
+      <section className="pt-36 pb-16 px-6 max-w-6xl mx-auto">
         <AnimatedSection>
-          {/* Available badge */}
-          <div className="inline-flex items-center gap-2 mb-10 px-3.5 py-1.5 rounded-full bg-white border border-gray-100 shadow-sm">
-            <span className="relative flex h-2 w-2">
-              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-60" />
-              <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-500" />
-            </span>
-            <span className="text-xs font-medium text-gray-500 tracking-wide">
-              Available for new projects
-            </span>
-          </div>
-
-          <h1 className="text-[clamp(3rem,8vw,6rem)] font-bold text-gray-900 leading-[1.04] tracking-[-0.03em] mb-8">
-            Design that
-            <br />
-            <span className="text-gray-300">moves people.</span>
+          <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-gray-400 mb-5">
+            UX Design Portfolio
+          </p>
+          <h1 className="text-[clamp(2.75rem,6vw,4.5rem)] font-bold text-gray-900 leading-[1.06] tracking-[-0.03em] mb-6">
+            Case Studies
           </h1>
-
-          <p className="text-lg md:text-xl text-gray-400 max-w-xl leading-relaxed font-light">
-            Senior UX Designer crafting intuitive products and experiences that
-            bridge the gap between user needs and business goals.
+          <p className="text-lg text-gray-400 max-w-lg leading-relaxed font-light">
+            A collection of end-to-end design work — research, strategy, and
+            execution across product and enterprise.
           </p>
         </AnimatedSection>
       </section>
 
-      {/* ── Work grid ── */}
-      <section className="pb-32 px-6 max-w-7xl mx-auto">
-        <AnimatedSection delay={0.12}>
-          <div className="flex items-center justify-between mb-10">
-            <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-gray-300">
-              Selected Work
-            </p>
-            <p className="text-[11px] font-medium text-gray-300">
-              {projects.length} {projects.length === 1 ? 'project' : 'projects'}
-            </p>
+      {/* ── Grid ── */}
+      <section className="pb-32 px-6 max-w-6xl mx-auto">
+        {studies.length === 0 ? (
+          <AnimatedSection>
+            <div className="py-24 text-center">
+              <p className="text-sm text-gray-300">
+                No published case studies yet. Add entries with Status ={" "}
+                <code className="text-gray-400">Published</code> to your Notion
+                database.
+              </p>
+            </div>
+          </AnimatedSection>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {studies.map((study, index) => (
+              <AnimatedSection
+                key={study.id}
+                delay={Math.min(index * 0.07, 0.35)}
+              >
+                <CaseStudyCard study={study} />
+              </AnimatedSection>
+            ))}
           </div>
-        </AnimatedSection>
-
-        <BentoGrid projects={projects} />
+        )}
       </section>
 
       {/* ── Footer ── */}
-      <footer className="border-t border-gray-100 px-6 py-10 max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
+      <footer className="border-t border-gray-100 px-6 py-10 max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
         <p className="text-xs text-gray-300">
           © {new Date().getFullYear()} Your Name. All rights reserved.
         </p>
