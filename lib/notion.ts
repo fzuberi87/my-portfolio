@@ -22,13 +22,18 @@ function toSlug(title: string): string {
 // ---------------------------------------------------------------------------
 
 export async function getCaseStudies(): Promise<CaseStudy[]> {
-  const response = await notion.databases.query({
-    database_id: DATABASE_ID,
-    filter: { property: "Status", select: { equals: "Published" } },
-    sorts: [{ property: "Year", direction: "descending" }],
-  });
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  return (response.results as any[]).map(formatCaseStudy);
+  try {
+    const response = await notion.databases.query({
+      database_id: DATABASE_ID,
+      filter: { property: "Status", select: { equals: "Published" } },
+      sorts: [{ property: "Year", direction: "descending" }],
+    });
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    return (response.results as any[]).map(formatCaseStudy);
+  } catch (err) {
+    console.error("[Notion] getCaseStudies failed:", (err as Error).message);
+    return [];
+  }
 }
 
 export async function getCaseStudyBySlug(slug: string): Promise<CaseStudy | null> {
