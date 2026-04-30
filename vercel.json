@@ -1,0 +1,10 @@
+{
+  "framework": "nextjs",
+  "buildCommand": "npm run build",
+  "devCommand": "npm run dev",
+  "installCommand": "npm install",
+  "env": {
+    "NOTION_SECRET": "@notion_secret",
+    "NOTION_DATABASE_ID": "@notion_database_id"
+  }
+}
