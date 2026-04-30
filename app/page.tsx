@@ -6,7 +6,7 @@ import type { Metadata } from "next";
 export const revalidate = 60;
 
 export const metadata: Metadata = {
-  title: "Case Studies",
+  title: "Work",
   description:
     "UX design case studies spanning product design, research, and design systems.",
 };
@@ -15,37 +15,38 @@ export default async function GalleryPage() {
   const studies = await getCaseStudies();
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen bg-runway-black">
       {/* ── Hero ── */}
-      <section className="pt-36 pb-16 px-6 max-w-6xl mx-auto">
+      <section className="pt-40 pb-20 px-6 max-w-6xl mx-auto">
         <AnimatedSection>
-          <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-gray-400 mb-5">
-            UX Design Portfolio
-          </p>
-          <h1 className="text-[clamp(2.75rem,6vw,4.5rem)] font-bold text-gray-900 leading-[1.06] tracking-[-0.03em] mb-6">
-            Case Studies
+          <p className="text-label mb-6">UX Design Portfolio</p>
+          <h1 className="text-display text-white mb-6 max-w-2xl">
+            Selected Work
           </h1>
-          <p className="text-lg text-gray-400 max-w-lg leading-relaxed font-light">
-            A collection of end-to-end design work — research, strategy, and
-            execution across product and enterprise.
+          <p className="text-[17px] text-runway-slate max-w-md leading-[1.5] tracking-[-0.01em]">
+            End-to-end design work — research, strategy, and execution across
+            product and enterprise.
           </p>
         </AnimatedSection>
       </section>
 
+      {/* ── Divider ── */}
+      <div className="border-t border-runway-border max-w-6xl mx-auto" />
+
       {/* ── Grid ── */}
-      <section className="pb-32 px-6 max-w-6xl mx-auto">
+      <section className="py-16 px-6 max-w-6xl mx-auto">
         {studies.length === 0 ? (
           <AnimatedSection>
             <div className="py-24 text-center">
-              <p className="text-sm text-gray-300">
+              <p className="text-sm text-runway-slate">
                 No published case studies yet. Add entries with Status ={" "}
-                <code className="text-gray-400">Published</code> to your Notion
-                database.
+                <code className="text-runway-muted">Published</code> to your
+                Notion database.
               </p>
             </div>
           </AnimatedSection>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {studies.map((study, index) => (
               <AnimatedSection
                 key={study.id}
@@ -59,16 +60,16 @@ export default async function GalleryPage() {
       </section>
 
       {/* ── Footer ── */}
-      <footer className="border-t border-gray-100 px-6 py-10 max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
-        <p className="text-xs text-gray-300">
-          © {new Date().getFullYear()} Your Name. All rights reserved.
+      <footer className="border-t border-runway-border px-6 py-10 max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
+        <p className="text-[13px] text-runway-footer">
+          © {new Date().getFullYear()} Your Name
         </p>
         <div className="flex items-center gap-6">
           <a
             href="https://linkedin.com/in/yourhandle"
             target="_blank"
             rel="noopener noreferrer"
-            className="text-xs text-gray-300 hover:text-gray-600 transition-colors"
+            className="text-[13px] text-runway-footer hover:text-white transition-colors duration-200"
           >
             LinkedIn
           </a>
@@ -76,13 +77,13 @@ export default async function GalleryPage() {
             href="https://twitter.com/yourhandle"
             target="_blank"
             rel="noopener noreferrer"
-            className="text-xs text-gray-300 hover:text-gray-600 transition-colors"
+            className="text-[13px] text-runway-footer hover:text-white transition-colors duration-200"
           >
             Twitter
           </a>
           <a
             href="mailto:hello@yourname.com"
-            className="text-xs text-gray-300 hover:text-gray-600 transition-colors"
+            className="text-[13px] text-runway-footer hover:text-white transition-colors duration-200"
           >
             hello@yourname.com
           </a>

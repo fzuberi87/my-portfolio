@@ -18,7 +18,7 @@ export function Header() {
   useEffect(() => setMenuOpen(false), [pathname]);
 
   const navLinks = [
-    { href: '/', label: 'Case Studies' },
+    { href: '/', label: 'Work' },
     { href: '/about', label: 'About' },
   ];
 
@@ -26,7 +26,7 @@ export function Header() {
     <header
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
         scrolled
-          ? 'bg-white/85 backdrop-blur-xl border-b border-gray-100/80 shadow-[0_1px_0_rgba(0,0,0,0.04)]'
+          ? 'bg-black/90 backdrop-blur-xl border-b border-runway-border'
           : 'bg-transparent'
       }`}
     >
@@ -34,21 +34,21 @@ export function Header() {
         {/* Logo */}
         <Link
           href="/"
-          className="text-gray-900 font-semibold text-[15px] tracking-tight hover:opacity-60 transition-opacity duration-200"
+          className="text-white text-[15px] font-medium tracking-tight hover:text-runway-muted transition-colors duration-200"
         >
           Your Name
         </Link>
 
         {/* Desktop nav */}
-        <div className="hidden sm:flex items-center gap-7">
+        <div className="hidden sm:flex items-center gap-8">
           {navLinks.map(({ href, label }) => (
             <Link
               key={href}
               href={href}
               className={`text-sm transition-colors duration-200 ${
                 pathname === href
-                  ? 'text-gray-900 font-medium'
-                  : 'text-gray-400 hover:text-gray-900'
+                  ? 'text-white'
+                  : 'text-runway-slate hover:text-white'
               }`}
             >
               {label}
@@ -56,7 +56,7 @@ export function Header() {
           ))}
           <a
             href="mailto:hello@yourname.com"
-            className="text-sm font-medium px-4 py-2 rounded-full bg-gray-950 text-white hover:bg-gray-700 transition-colors duration-200"
+            className="text-sm font-medium px-4 py-2 rounded bg-white text-black hover:bg-runway-muted transition-colors duration-200"
           >
             Say hello
           </a>
@@ -64,7 +64,7 @@ export function Header() {
 
         {/* Mobile hamburger */}
         <button
-          className="sm:hidden p-2 text-gray-500 hover:text-gray-900 transition-colors"
+          className="sm:hidden p-2 text-runway-slate hover:text-white transition-colors"
           onClick={() => setMenuOpen((o) => !o)}
           aria-label="Toggle menu"
         >
@@ -75,19 +75,19 @@ export function Header() {
 
       {/* Mobile menu */}
       {menuOpen && (
-        <div className="sm:hidden bg-white/95 backdrop-blur-xl border-b border-gray-100 px-6 py-5 flex flex-col gap-4">
+        <div className="sm:hidden bg-black/95 backdrop-blur-xl border-b border-runway-border px-6 py-5 flex flex-col gap-4">
           {navLinks.map(({ href, label }) => (
             <Link
               key={href}
               href={href}
-              className="text-sm text-gray-600 hover:text-gray-900 transition-colors"
+              className="text-sm text-runway-slate hover:text-white transition-colors"
             >
               {label}
             </Link>
           ))}
           <a
             href="mailto:hello@yourname.com"
-            className="text-sm font-medium text-gray-900 hover:text-indigo-600 transition-colors"
+            className="text-sm text-white hover:text-runway-muted transition-colors"
           >
             hello@yourname.com
           </a>
