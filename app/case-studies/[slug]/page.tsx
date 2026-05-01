@@ -42,20 +42,20 @@ export default async function CaseStudyPage({ params }: Props) {
   const blocks = await getCaseStudyBlocks(study.id);
 
   const meta = [
-    { label: "Company", value: study.company },
-    { label: "Role",    value: study.role },
+    { label: "Company",  value: study.company },
+    { label: "Role",     value: study.role },
     { label: "Industry", value: study.industry },
-    { label: "Year",    value: study.year ? String(study.year) : "" },
+    { label: "Year",     value: study.year ? String(study.year) : "" },
   ].filter((m) => m.value);
 
   return (
-    <div className="min-h-screen bg-white dark:bg-black">
-      {/* ── Back bar (replaces the main header on this page) ── */}
-      <div className="fixed top-0 left-0 right-0 z-50 bg-white/90 dark:bg-black/90 backdrop-blur-xl border-b border-[#e5e5e5] dark:border-runway-border">
-        <div className="max-w-content mx-auto px-6 h-[60px] flex items-center justify-between">
+    <div className="min-h-screen bg-el-canvas dark:bg-el-dark">
+      {/* ── Back bar ── */}
+      <div className="fixed top-0 left-0 right-0 z-50 bg-el-canvas/90 dark:bg-el-dark/90 backdrop-blur-xl border-b border-el-hairline dark:border-el-hairline/20">
+        <div className="max-w-content mx-auto px-6 h-16 flex items-center justify-between">
           <Link
             href="/"
-            className="group inline-flex items-center gap-2 text-sm text-[#525252] dark:text-runway-slate hover:text-black dark:hover:text-white transition-colors"
+            className="group inline-flex items-center gap-2 text-[14px] text-el-muted dark:text-el-on-dark-soft hover:text-el-ink dark:hover:text-el-on-dark transition-colors"
           >
             <svg
               width="16" height="16" viewBox="0 0 16 16" fill="none"
@@ -66,7 +66,7 @@ export default async function CaseStudyPage({ params }: Props) {
             All work
           </Link>
           {study.industry && (
-            <span className="text-label text-[#525252] dark:text-runway-slate">
+            <span className="text-label text-el-muted dark:text-el-on-dark-soft">
               {study.industry}
             </span>
           )}
@@ -75,7 +75,7 @@ export default async function CaseStudyPage({ params }: Props) {
 
       {/* ── Cover image — full bleed ── */}
       {study.cover ? (
-        <div className="relative w-full h-[55vh] min-h-[360px] pt-[60px]">
+        <div className="relative w-full h-[55vh] min-h-[360px] pt-16">
           <Image
             src={study.cover}
             fill
@@ -84,36 +84,36 @@ export default async function CaseStudyPage({ params }: Props) {
             priority
             sizes="100vw"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-white dark:from-black via-transparent to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-t from-el-canvas dark:from-el-dark via-transparent to-transparent" />
         </div>
       ) : (
-        <div className="h-[60px]" />
+        <div className="h-16" />
       )}
 
       {/* ── Content ── */}
       <div className={`max-w-content mx-auto px-6 ${study.cover ? "relative -mt-16" : "pt-10"}`}>
         <AnimatedSection>
-          <h1 className="text-[clamp(2rem,5vw,3.25rem)] font-medium text-black dark:text-white leading-[1.15] tracking-[-0.025em] mb-7">
+          <h1 className="font-display text-[clamp(2rem,5vw,3.25rem)] font-normal text-el-ink dark:text-el-on-dark leading-[1.1] tracking-[-0.02em] mb-7">
             {study.title}
           </h1>
 
           {/* Meta */}
           {meta.length > 0 && (
-            <div className="flex flex-wrap gap-x-8 gap-y-5 py-7 border-y border-[#e5e5e5] dark:border-runway-border">
+            <div className="flex flex-wrap gap-x-8 gap-y-5 py-7 border-y border-el-hairline dark:border-el-hairline/20">
               {meta.map(({ label, value }) => (
                 <div key={label}>
-                  <p className="text-label text-[#999] dark:text-runway-footer mb-1.5">{label}</p>
-                  <p className="text-[14px] font-medium text-black dark:text-white">{value}</p>
+                  <p className="text-label text-el-muted dark:text-el-on-dark-soft mb-1.5">{label}</p>
+                  <p className="text-[14px] font-medium text-el-ink dark:text-el-on-dark">{value}</p>
                 </div>
               ))}
               {study.skills.length > 0 && (
                 <div>
-                  <p className="text-label text-[#999] dark:text-runway-footer mb-1.5">Skills</p>
+                  <p className="text-label text-el-muted dark:text-el-on-dark-soft mb-1.5">Skills</p>
                   <div className="flex flex-wrap gap-1.5">
                     {study.skills.map((skill) => (
                       <span
                         key={skill}
-                        className="text-[11px] font-medium text-[#525252] dark:text-runway-muted border border-[#e5e5e5] dark:border-runway-border px-2.5 py-1 rounded"
+                        className="text-[11px] font-medium text-el-body dark:text-el-on-dark-soft border border-el-hairline-strong dark:border-el-hairline/30 px-2.5 py-1 rounded-full"
                       >
                         {skill}
                       </span>
@@ -131,12 +131,12 @@ export default async function CaseStudyPage({ params }: Props) {
         </AnimatedSection>
 
         {/* Back CTA */}
-        <AnimatedSection className="pb-20 border-t border-[#e5e5e5] dark:border-runway-border pt-12">
+        <AnimatedSection className="pb-20 border-t border-el-hairline dark:border-el-hairline/20 pt-12">
           <Link
             href="/"
-            className="group inline-flex items-center gap-3 text-sm text-[#525252] dark:text-runway-slate hover:text-black dark:hover:text-white transition-colors"
+            className="group inline-flex items-center gap-3 text-[14px] text-el-muted dark:text-el-on-dark-soft hover:text-el-ink dark:hover:text-el-on-dark transition-colors"
           >
-            <span className="inline-flex items-center justify-center w-9 h-9 rounded border border-[#e5e5e5] dark:border-runway-border group-hover:border-[#525252] dark:group-hover:border-runway-muted transition-colors">
+            <span className="inline-flex items-center justify-center w-9 h-9 rounded-full border border-el-hairline-strong dark:border-el-hairline/30 group-hover:border-el-ink dark:group-hover:border-el-on-dark transition-colors">
               <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
                 <path d="M9 2L4 7l5 5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
               </svg>

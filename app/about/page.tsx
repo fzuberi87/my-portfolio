@@ -45,11 +45,11 @@ const EXPERIENCE = [
 
 export default function AboutPage() {
   return (
-    <div className="min-h-screen bg-white dark:bg-black">
+    <div className="min-h-screen bg-el-canvas dark:bg-el-dark">
 
       {/* ── Cover photo placeholder ── */}
-      <div className="w-full h-[414px] bg-[#d9d9d9] dark:bg-runway-surface pt-[60px] overflow-hidden">
-        {/* Replace this div with an <Image> once you have a hero photo */}
+      <div className="w-full h-[414px] bg-el-strong dark:bg-el-dark-elevated pt-[64px] overflow-hidden">
+        {/* Replace with <Image src="/cover.jpg" fill className="object-cover" alt="Faiz Zuberi" /> */}
       </div>
 
       <div className="max-w-content mx-auto px-6">
@@ -58,13 +58,13 @@ export default function AboutPage() {
         <section className="py-14">
           <AnimatedSection>
             <div className="max-w-[830px]">
-              <h1 className="text-[52px] font-medium text-black dark:text-white leading-[1.2] tracking-[-0.025em] mb-6">
+              <h1 className="font-display text-[clamp(2.5rem,6vw,4rem)] font-normal text-el-ink dark:text-el-on-dark leading-[1.08] tracking-[-0.03em] mb-6">
                 I&apos;m Faiz. A product designer with 12+ years of experience
                 across brand and product, at companies large and small, from
                 tech to ice cream.
               </h1>
 
-              <div className="text-[18px] text-[#525252] dark:text-runway-slate leading-[1.6] space-y-5">
+              <div className="text-[18px] text-el-body dark:text-el-on-dark-soft leading-[1.6] tracking-[0.01em] space-y-5">
                 <p>
                   I&apos;m a Dallas-based senior product designer with 12+ years
                   of cross-disciplinary design experience. Currently, I&apos;m
@@ -109,20 +109,23 @@ export default function AboutPage() {
           </AnimatedSection>
         </section>
 
+        {/* ── Divider ── */}
+        <div className="border-t border-el-hairline dark:border-el-hairline/20" />
+
         {/* ── Experience ── */}
-        <section className="py-10 pb-24">
+        <section className="py-14 pb-24">
           <AnimatedSection>
-            <h2 className="text-[52px] font-medium text-black dark:text-white leading-[1.2] tracking-[-0.025em] mb-16">
+            <h2 className="font-display text-[clamp(2rem,4vw,3.25rem)] font-normal text-el-ink dark:text-el-on-dark leading-[1.1] tracking-[-0.02em] mb-14">
               Experience
             </h2>
           </AnimatedSection>
 
-          <div className="flex flex-col gap-12">
+          <div className="flex flex-col">
             {EXPERIENCE.map((job, i) => (
               <AnimatedSection key={job.company + job.title} delay={i * 0.06}>
-                <div className="flex gap-[55px] items-start pb-12 border-b border-[#e5e5e5] dark:border-runway-border">
+                <div className="flex gap-8 sm:gap-14 items-start py-10 border-b border-el-hairline dark:border-el-hairline/20">
                   {/* Logo */}
-                  <div className="flex-shrink-0 w-[60px] h-[60px] rounded-lg bg-[#d9d9d9] dark:bg-runway-surface overflow-hidden flex items-center justify-center">
+                  <div className="flex-shrink-0 w-[60px] h-[60px] rounded-lg bg-el-strong dark:bg-el-dark-elevated overflow-hidden flex items-center justify-center border border-el-hairline dark:border-el-hairline/20">
                     {job.logoUrl ? (
                       <Image
                         src={job.logoUrl}
@@ -132,7 +135,7 @@ export default function AboutPage() {
                         className="object-contain p-2"
                       />
                     ) : (
-                      <span className="text-[10px] font-semibold text-[#525252] dark:text-runway-slate text-center leading-tight px-1">
+                      <span className="text-[10px] font-semibold text-el-muted text-center leading-tight px-1">
                         {job.company}
                       </span>
                     )}
@@ -140,18 +143,18 @@ export default function AboutPage() {
 
                   {/* Details */}
                   <div className="flex-1 min-w-0">
-                    <p className="text-[20px] font-semibold text-black dark:text-white leading-[1.2] mb-3">
-                      {job.company}
-                    </p>
-                    <div className="flex items-center justify-between mb-4">
-                      <p className="text-[20px] font-medium text-[#525252] dark:text-runway-slate leading-[1.2]">
-                        {job.title}
+                    <div className="flex items-start justify-between gap-4 mb-2">
+                      <p className="text-[18px] font-semibold text-el-ink dark:text-el-on-dark leading-[1.2]">
+                        {job.company}
                       </p>
-                      <p className="text-[20px] font-medium text-[#525252] dark:text-runway-slate leading-[1.2] whitespace-nowrap ml-4">
+                      <p className="text-[14px] text-el-muted dark:text-el-on-dark-soft whitespace-nowrap mt-0.5">
                         {job.period}
                       </p>
                     </div>
-                    <p className="text-[16px] text-[#525252] dark:text-runway-midslate leading-[1.6]">
+                    <p className="text-[15px] text-el-body dark:text-el-on-dark-soft leading-[1.4] mb-3">
+                      {job.title}
+                    </p>
+                    <p className="text-[15px] text-el-body dark:text-el-on-dark-soft leading-[1.6]">
                       {job.description}
                     </p>
                   </div>
@@ -162,8 +165,8 @@ export default function AboutPage() {
         </section>
 
         {/* ── Footer ── */}
-        <footer className="border-t border-[#e5e5e5] dark:border-runway-border py-10 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <p className="text-[13px] text-[#999] dark:text-runway-footer">
+        <footer className="border-t border-el-hairline dark:border-el-hairline/20 py-10 flex flex-col sm:flex-row items-center justify-between gap-4">
+          <p className="text-[13px] text-el-muted dark:text-el-on-dark-soft">
             © {new Date().getFullYear()} Faiz Zuberi
           </p>
           <div className="flex items-center gap-6">
@@ -171,13 +174,13 @@ export default function AboutPage() {
               href="https://www.linkedin.com/in/fzuberi87"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-[13px] text-[#999] dark:text-runway-footer hover:text-black dark:hover:text-white transition-colors"
+              className="text-[13px] text-el-muted dark:text-el-on-dark-soft hover:text-el-ink dark:hover:text-el-on-dark transition-colors"
             >
               LinkedIn
             </a>
             <a
               href="mailto:faiz.zuberi@gmail.com"
-              className="text-[13px] text-[#999] dark:text-runway-footer hover:text-black dark:hover:text-white transition-colors"
+              className="text-[13px] text-el-muted dark:text-el-on-dark-soft hover:text-el-ink dark:hover:text-el-on-dark transition-colors"
             >
               faiz.zuberi@gmail.com
             </a>

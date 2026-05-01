@@ -9,12 +9,12 @@ function RichText({ items }: { items: RichTextItem[] }) {
 
         if (annotations.code)
           node = (
-            <code className="bg-runway-surface text-runway-silver px-1.5 py-0.5 rounded text-[13px] font-mono border border-runway-border">
+            <code className="bg-el-strong dark:bg-el-dark-elevated text-el-body-strong dark:text-el-on-dark px-1.5 py-0.5 rounded text-[13px] font-mono border border-el-hairline dark:border-el-hairline/20">
               {node}
             </code>
           );
         if (annotations.bold)
-          node = <strong className="font-semibold text-white">{node}</strong>;
+          node = <strong className="font-semibold text-el-ink dark:text-el-on-dark">{node}</strong>;
         if (annotations.italic) node = <em className="italic">{node}</em>;
         if (annotations.strikethrough) node = <s>{node}</s>;
         if (annotations.underline && !href)
@@ -25,7 +25,7 @@ function RichText({ items }: { items: RichTextItem[] }) {
               href={href}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-white underline underline-offset-2 hover:text-runway-muted transition-colors"
+              className="text-el-ink dark:text-el-on-dark underline underline-offset-2 hover:opacity-50 transition-opacity"
             >
               {node}
             </a>
@@ -43,7 +43,7 @@ function Block({ block }: { block: NotionBlock }) {
       const rt: RichTextItem[] = block.paragraph.rich_text;
       if (!rt.length) return <div className="mb-4" />;
       return (
-        <p className="text-[16px] text-runway-midslate leading-[1.7] tracking-[-0.01em] mb-6">
+        <p className="text-[16px] text-el-body dark:text-el-on-dark-soft leading-[1.7] tracking-[0.01em] mb-6">
           <RichText items={rt} />
         </p>
       );
@@ -51,29 +51,29 @@ function Block({ block }: { block: NotionBlock }) {
 
     case "heading_1":
       return (
-        <h1 className="text-[26px] font-normal text-white mt-16 mb-5 tracking-[-0.025em] leading-[1.1]">
+        <h1 className="font-display text-[2rem] font-normal text-el-ink dark:text-el-on-dark mt-16 mb-5 tracking-[-0.025em] leading-[1.1]">
           <RichText items={block.heading_1.rich_text} />
         </h1>
       );
 
     case "heading_2":
       return (
-        <h2 className="text-[20px] font-normal text-white mt-14 mb-4 pt-10 border-t border-runway-border tracking-[-0.02em] leading-[1.2]">
+        <h2 className="font-display text-[1.5rem] font-normal text-el-ink dark:text-el-on-dark mt-14 mb-4 pt-10 border-t border-el-hairline dark:border-el-hairline/20 tracking-[-0.02em] leading-[1.2]">
           <RichText items={block.heading_2.rich_text} />
         </h2>
       );
 
     case "heading_3":
       return (
-        <h3 className="text-[17px] font-medium text-white mt-8 mb-3 tracking-[-0.01em]">
+        <h3 className="text-[17px] font-semibold text-el-ink dark:text-el-on-dark mt-8 mb-3 tracking-[-0.01em]">
           <RichText items={block.heading_3.rich_text} />
         </h3>
       );
 
     case "quote":
       return (
-        <blockquote className="border-l-[2px] border-runway-muted pl-6 my-10">
-          <p className="text-[18px] text-white leading-[1.5] tracking-[-0.02em]">
+        <blockquote className="border-l-[2px] border-el-muted dark:border-el-on-dark-soft pl-6 my-10">
+          <p className="font-display text-[1.25rem] font-normal text-el-ink dark:text-el-on-dark leading-[1.5] tracking-[-0.02em]">
             <RichText items={block.quote.rich_text} />
           </p>
         </blockquote>
@@ -83,9 +83,9 @@ function Block({ block }: { block: NotionBlock }) {
       const icon =
         block.callout.icon?.type === "emoji" ? block.callout.icon.emoji : "→";
       return (
-        <div className="flex gap-4 bg-runway-surface border border-runway-border rounded p-5 my-8">
+        <div className="flex gap-4 bg-el-strong dark:bg-el-dark-elevated border border-el-hairline dark:border-el-hairline/20 rounded-xl p-5 my-8">
           <span className="text-lg leading-none mt-0.5 flex-shrink-0">{icon}</span>
-          <p className="text-[15px] text-runway-slate leading-[1.6]">
+          <p className="text-[15px] text-el-body dark:text-el-on-dark-soft leading-[1.6]">
             <RichText items={block.callout.rich_text} />
           </p>
         </div>
@@ -94,7 +94,7 @@ function Block({ block }: { block: NotionBlock }) {
 
     case "code":
       return (
-        <pre className="bg-runway-surface border border-runway-border text-runway-silver rounded p-6 my-8 overflow-x-auto">
+        <pre className="bg-el-strong dark:bg-el-dark-elevated border border-el-hairline dark:border-el-hairline/20 text-el-body dark:text-el-on-dark-soft rounded-xl p-6 my-8 overflow-x-auto">
           <code className="text-sm font-mono leading-relaxed">
             <RichText items={block.code.rich_text} />
           </code>
@@ -110,7 +110,7 @@ function Block({ block }: { block: NotionBlock }) {
       const captionText = caption.map((c) => c.plain_text).join("");
       return (
         <figure className="my-10">
-          <div className="rounded overflow-hidden bg-runway-surface">
+          <div className="rounded-2xl overflow-hidden bg-el-strong dark:bg-el-dark-elevated border border-el-hairline dark:border-el-hairline/20">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={url}
@@ -120,7 +120,7 @@ function Block({ block }: { block: NotionBlock }) {
             />
           </div>
           {captionText && (
-            <figcaption className="mt-3 text-center text-[12px] text-runway-footer tracking-[0.01em]">
+            <figcaption className="mt-3 text-center text-[12px] text-el-muted dark:text-el-on-dark-soft tracking-[0.01em]">
               {captionText}
             </figcaption>
           )}
@@ -129,12 +129,12 @@ function Block({ block }: { block: NotionBlock }) {
     }
 
     case "divider":
-      return <hr className="my-14 border-runway-border" />;
+      return <hr className="my-14 border-el-hairline dark:border-el-hairline/20" />;
 
     case "video":
       if (block.video.type === "external") {
         return (
-          <div className="my-10 aspect-video rounded overflow-hidden bg-runway-surface">
+          <div className="my-10 aspect-video rounded-2xl overflow-hidden bg-el-strong dark:bg-el-dark-elevated border border-el-hairline dark:border-el-hairline/20">
             <iframe
               src={block.video.external.url}
               className="w-full h-full"
@@ -148,14 +148,14 @@ function Block({ block }: { block: NotionBlock }) {
 
     case "toggle":
       return (
-        <details className="group my-4 rounded border border-runway-border overflow-hidden">
-          <summary className="flex items-center justify-between px-5 py-3.5 cursor-pointer text-[14px] font-medium text-runway-silver hover:bg-runway-surface transition-colors list-none">
+        <details className="group my-4 rounded-xl border border-el-hairline dark:border-el-hairline/20 overflow-hidden">
+          <summary className="flex items-center justify-between px-5 py-3.5 cursor-pointer text-[14px] font-medium text-el-ink dark:text-el-on-dark hover:bg-el-strong dark:hover:bg-el-dark-elevated transition-colors list-none">
             <RichText items={block.toggle.rich_text} />
-            <span className="ml-4 text-runway-slate group-open:rotate-180 transition-transform duration-200">
+            <span className="ml-4 text-el-muted dark:text-el-on-dark-soft group-open:rotate-180 transition-transform duration-200">
               ▾
             </span>
           </summary>
-          <div className="px-5 py-4 border-t border-runway-border text-[14px] text-runway-slate leading-relaxed">
+          <div className="px-5 py-4 border-t border-el-hairline dark:border-el-hairline/20 text-[14px] text-el-body dark:text-el-on-dark-soft leading-relaxed">
             {/* Nested blocks not fetched in this implementation */}
           </div>
         </details>
@@ -183,7 +183,7 @@ export function NotionBlocks({ blocks }: { blocks: NotionBlock[] }) {
           {items.map((item) => (
             <li
               key={item.id}
-              className="text-[16px] text-runway-midslate leading-[1.7] list-disc marker:text-runway-border"
+              className="text-[16px] text-el-body dark:text-el-on-dark-soft leading-[1.7] list-disc marker:text-el-muted dark:marker:text-el-on-dark-soft"
             >
               <RichText items={item.bulleted_list_item.rich_text} />
             </li>
@@ -201,12 +201,12 @@ export function NotionBlocks({ blocks }: { blocks: NotionBlock[] }) {
       elements.push(
         <ol
           key={`ol-${items[0].id}`}
-          className="mb-6 pl-5 space-y-2 list-decimal marker:text-runway-slate marker:font-medium"
+          className="mb-6 pl-5 space-y-2 list-decimal marker:text-el-muted dark:marker:text-el-on-dark-soft marker:font-medium"
         >
           {items.map((item) => (
             <li
               key={item.id}
-              className="text-[16px] text-runway-midslate leading-[1.7]"
+              className="text-[16px] text-el-body dark:text-el-on-dark-soft leading-[1.7]"
             >
               <RichText items={item.numbered_list_item.rich_text} />
             </li>

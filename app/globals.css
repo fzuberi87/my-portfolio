@@ -3,9 +3,7 @@
 @tailwind utilities;
 
 @layer base {
-  *,
-  *::before,
-  *::after { box-sizing: border-box; }
+  *, *::before, *::after { box-sizing: border-box; }
 
   html {
     scroll-behavior: smooth;
@@ -15,33 +13,45 @@
 
   body {
     font-family: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
-    /* Light mode */
-    background-color: #ffffff;
-    color: #000000;
-  }
-
-  .dark body {
-    background-color: #000000;
-    color: #ffffff;
+    background-color: #f5f5f5;
+    color: #0c0a09;
   }
 
   ::selection {
-    background-color: #000000;
+    background-color: #292524;
     color: #ffffff;
-  }
-  .dark ::selection {
-    background-color: #ffffff;
-    color: #000000;
   }
 }
 
 @layer utilities {
+  /* ElevenLabs display — EB Garamond, weight 400 (lightest available ≈ Waldenburg 300) */
+  .font-display {
+    font-family: var(--font-eb-garamond), 'Times New Roman', serif;
+    font-weight: 400;
+  }
+
+  /* Caption-uppercase label */
   .text-label {
-    font-size: 11px;
-    font-weight: 500;
+    font-size: 12px;
+    font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.08em;
   }
+
+  /* Atmospheric gradient orb — pure decoration, never contains content */
+  .orb {
+    position: absolute;
+    border-radius: 9999px;
+    filter: blur(80px);
+    opacity: 0.55;
+    pointer-events: none;
+    user-select: none;
+  }
+  .orb-mint    { background: radial-gradient(circle, #a7e5d3, transparent 70%); }
+  .orb-peach   { background: radial-gradient(circle, #f4c5a8, transparent 70%); }
+  .orb-lavender{ background: radial-gradient(circle, #c8b8e0, transparent 70%); }
+  .orb-sky     { background: radial-gradient(circle, #a8c8e8, transparent 70%); }
+  .orb-rose    { background: radial-gradient(circle, #e8b8c4, transparent 70%); }
 
   .line-clamp-2 {
     display: -webkit-box;

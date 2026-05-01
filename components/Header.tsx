@@ -9,16 +9,15 @@ const RESUME_URL =
   'https://drive.google.com/file/d/1AQcIBOBFekYLvCIaES_BljntPMIeLQT3/view?usp=sharing';
 
 const navLinks = [
-  { href: '/about',        label: 'About' },
-  { href: '/',             label: 'Work' },
-  { href: '/experiments',  label: 'Experiments' },
+  { href: '/about',       label: 'About' },
+  { href: '/',            label: 'Work' },
+  { href: '/experiments', label: 'Experiments' },
   { href: 'mailto:faiz.zuberi@gmail.com', label: 'Contact', external: true },
-  { href: RESUME_URL,      label: 'Resume', external: true },
 ];
 
 export function Header() {
-  const [scrolled, setScrolled]   = useState(false);
-  const [menuOpen, setMenuOpen]   = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
   const pathname = usePathname();
 
   useEffect(() => {
@@ -33,21 +32,18 @@ export function Header() {
     <header
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
         scrolled
-          ? 'bg-white/90 dark:bg-black/90 backdrop-blur-xl border-b border-[#e5e5e5] dark:border-runway-border'
-          : 'bg-white dark:bg-black border-b border-[#e5e5e5] dark:border-runway-border'
+          ? 'bg-el-canvas/90 dark:bg-el-dark/90 backdrop-blur-xl border-b border-el-hairline dark:border-el-hairline/20'
+          : 'bg-el-canvas dark:bg-el-dark border-b border-el-hairline dark:border-el-hairline/20'
       }`}
     >
-      <nav className="max-w-content mx-auto px-6 h-[60px] flex items-center justify-between">
+      <nav className="max-w-content mx-auto px-6 h-16 flex items-center justify-between">
         {/* Profile — avatar + name */}
         <Link href="/" className="flex items-center gap-2.5 group">
-          {/* Avatar circle — swap src to /avatar.jpg once you add your photo */}
-          <div className="w-9 h-9 rounded-full bg-[#d9d9d9] dark:bg-runway-surface overflow-hidden flex items-center justify-center flex-shrink-0">
-            {/* Replace this div with <img src="/avatar.jpg" className="w-full h-full object-cover" alt="Faiz Zuberi" /> once you have a photo */}
-            <span className="text-[11px] font-semibold text-[#525252] dark:text-runway-slate select-none">
-              FZ
-            </span>
+          <div className="w-9 h-9 rounded-full bg-el-strong dark:bg-el-dark-elevated overflow-hidden flex items-center justify-center flex-shrink-0">
+            {/* Replace with <img src="/avatar.jpg" className="w-full h-full object-cover" alt="Faiz Zuberi" /> */}
+            <span className="text-[11px] font-semibold text-el-muted select-none">FZ</span>
           </div>
-          <span className="text-[16px] font-semibold text-black dark:text-white tracking-tight group-hover:opacity-60 transition-opacity duration-200">
+          <span className="text-[15px] font-semibold text-el-ink dark:text-el-on-dark tracking-tight group-hover:opacity-60 transition-opacity duration-200">
             Faiz Zuberi
           </span>
         </Link>
@@ -58,42 +54,40 @@ export function Header() {
             const isActive = !external && pathname === href;
             if (external) {
               return (
-                <a
-                  key={label}
-                  href={href}
-                  target={label === 'Resume' ? '_blank' : undefined}
-                  rel={label === 'Resume' ? 'noopener noreferrer' : undefined}
-                  className="text-[16px] text-[#525252] dark:text-runway-slate hover:text-black dark:hover:text-white transition-colors duration-200"
-                >
+                <a key={label} href={href}
+                  className="text-[15px] font-medium text-el-muted dark:text-el-on-dark-soft hover:text-el-ink dark:hover:text-el-on-dark transition-colors duration-200">
                   {label}
                 </a>
               );
             }
             return (
-              <Link
-                key={href}
-                href={href}
-                className={`text-[16px] transition-colors duration-200 ${
+              <Link key={href} href={href}
+                className={`text-[15px] font-medium transition-colors duration-200 ${
                   isActive
-                    ? 'text-black dark:text-white font-medium'
-                    : 'text-[#525252] dark:text-runway-slate hover:text-black dark:hover:text-white'
-                }`}
-              >
+                    ? 'text-el-ink dark:text-el-on-dark'
+                    : 'text-el-muted dark:text-el-on-dark-soft hover:text-el-ink dark:hover:text-el-on-dark'
+                }`}>
                 {label}
               </Link>
             );
           })}
+
+          {/* Resume pill CTA */}
+          <a href={RESUME_URL} target="_blank" rel="noopener noreferrer"
+            className="inline-flex items-center h-10 px-5 rounded-pill bg-el-primary dark:bg-el-on-dark text-white dark:text-el-ink text-[15px] font-medium hover:bg-el-ink dark:hover:bg-el-strong transition-colors duration-200">
+            Resume
+          </a>
+
           <ThemeToggle />
         </div>
 
-        {/* Mobile: theme toggle + hamburger */}
+        {/* Mobile */}
         <div className="sm:hidden flex items-center gap-2">
           <ThemeToggle />
           <button
-            className="p-2 text-[#525252] dark:text-runway-slate hover:text-black dark:hover:text-white transition-colors"
+            className="p-2 text-el-muted hover:text-el-ink dark:hover:text-el-on-dark transition-colors"
             onClick={() => setMenuOpen((o) => !o)}
-            aria-label="Toggle menu"
-          >
+            aria-label="Toggle menu">
             <span className="block w-5 h-px bg-current mb-1.5" />
             <span className="block w-3.5 h-px bg-current" />
           </button>
@@ -102,28 +96,24 @@ export function Header() {
 
       {/* Mobile menu */}
       {menuOpen && (
-        <div className="sm:hidden bg-white/95 dark:bg-black/95 backdrop-blur-xl border-b border-[#e5e5e5] dark:border-runway-border px-6 py-5 flex flex-col gap-4">
+        <div className="sm:hidden bg-el-canvas/95 dark:bg-el-dark/95 backdrop-blur-xl border-b border-el-hairline dark:border-el-hairline/20 px-6 py-5 flex flex-col gap-4">
           {navLinks.map(({ href, label, external }) =>
             external ? (
-              <a
-                key={label}
-                href={href}
-                target={label === 'Resume' ? '_blank' : undefined}
-                rel={label === 'Resume' ? 'noopener noreferrer' : undefined}
-                className="text-sm text-[#525252] dark:text-runway-slate hover:text-black dark:hover:text-white transition-colors"
-              >
+              <a key={label} href={href}
+                className="text-[15px] font-medium text-el-muted dark:text-el-on-dark-soft hover:text-el-ink dark:hover:text-el-on-dark transition-colors">
                 {label}
               </a>
             ) : (
-              <Link
-                key={href}
-                href={href}
-                className="text-sm text-[#525252] dark:text-runway-slate hover:text-black dark:hover:text-white transition-colors"
-              >
+              <Link key={href} href={href}
+                className="text-[15px] font-medium text-el-muted dark:text-el-on-dark-soft hover:text-el-ink dark:hover:text-el-on-dark transition-colors">
                 {label}
               </Link>
             )
           )}
+          <a href={RESUME_URL} target="_blank" rel="noopener noreferrer"
+            className="inline-flex w-fit items-center h-10 px-5 rounded-pill bg-el-primary text-white text-[15px] font-medium">
+            Resume
+          </a>
         </div>
       )}
     </header>
