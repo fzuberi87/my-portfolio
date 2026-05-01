@@ -9,12 +9,12 @@ const DATABASE_ID = process.env.NOTION_DATABASE_ID!;
 // ---------------------------------------------------------------------------
 
 const LOGO_MAP: Record<string, string> = {
-  "allata":                  "https://logo.clearbit.com/allata.com",
-  "redfin":                  "https://logo.clearbit.com/redfin.com",
-  "redfin home services":    "https://logo.clearbit.com/redfin.com",
-  "intuit":                  "https://logo.clearbit.com/intuit.com",
-  "caris life sciences":     "https://logo.clearbit.com/carislifesciences.com",
-  "riwayat house (self published)": "",
+  "allata":                           "https://logo.clearbit.com/allata.com",
+  "redfin":                           "https://logo.clearbit.com/redfin.com",
+  "redfin home services":             "https://logo.clearbit.com/redfin.com",
+  "intuit":                           "https://logo.clearbit.com/intuit.com",
+  "caris life sciences":              "https://logo.clearbit.com/carislifesciences.com",
+  "riwayat house (self published)":   "",
 };
 
 function getLogoUrl(company: string): string {
@@ -42,7 +42,12 @@ export async function getCaseStudies(): Promise<CaseStudy[]> {
   try {
     const response = await notion.databases.query({
       database_id: DATABASE_ID,
-      filter: { property: "Status", select: { equals: "Published" } },
+      filter: {
+        and: [
+          { property: "Status",   select: { equals: "Published" } },
+          { property: "Category", select: { equals: "Case Study" } },
+        ],
+      },
       sorts: [{ property: "Year", direction: "descending" }],
     });
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -53,14 +58,40 @@ export async function getCaseStudies(): Promise<CaseStudy[]> {
   }
 }
 
+export async function getExperiments(): Promise<CaseStudy[]> {
+  try {
+    const response = await notion.databases.query({
+      database_id: DATABASE_ID,
+      filter: {
+        and: [
+          { property: "Status",   select: { equals: "Published" } },
+          { property: "Category", select: { equals: "Experiment" } },
+        ],
+      },
+      sorts: [{ property: "Year", direction: "descending" }],
+    });
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    return (response.results as any[]).map(formatCaseStudy);
+  } catch (err) {
+    console.error("[Notion] getExperiments failed:", (err as Error).message);
+    return [];
+  }
+}
+
 export async function getCaseStudyBySlug(slug: string): Promise<CaseStudy | null> {
-  const all = await getCaseStudies();
-  return all.find((cs) => cs.slug === slug) ?? null;
+  const [studies, experiments] = await Promise.all([
+    getCaseStudies(),
+    getExperiments(),
+  ]);
+  return [...studies, ...experiments].find((cs) => cs.slug === slug) ?? null;
 }
 
 export async function getAllSlugs(): Promise<{ slug: string }[]> {
-  const studies = await getCaseStudies();
-  return studies.map((s) => ({ slug: s.slug }));
+  const [studies, experiments] = await Promise.all([
+    getCaseStudies(),
+    getExperiments(),
+  ]);
+  return [...studies, ...experiments].map((s) => ({ slug: s.slug }));
 }
 
 // ---------------------------------------------------------------------------
@@ -91,19 +122,19 @@ export async function getCaseStudyBlocks(pageId: string): Promise<NotionBlock[]>
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function formatCaseStudy(page: any): CaseStudy {
   const props = page.properties;
-  const title: string = props.Name?.title?.[0]?.plain_text ?? "Untitled";
+  const title: string   = props.Name?.title?.[0]?.plain_text ?? "Untitled";
   const company: string = props.Company?.rich_text?.[0]?.plain_text ?? "";
 
   return {
-    id: page.id,
-    slug: toSlug(title),
+    id:       page.id,
+    slug:     toSlug(title),
     title,
     company,
-    role: props.Role?.rich_text?.[0]?.plain_text ?? "",
+    role:     props.Role?.rich_text?.[0]?.plain_text ?? "",
     industry: props.Industry?.select?.name ?? "",
-    skills: props.Skills?.multi_select?.map((s: { name: string }) => s.name) ?? [],
-    year: props.Year?.number ?? new Date().getFullYear(),
-    cover: page.cover?.external?.url ?? page.cover?.file?.url ?? "",
-    logoUrl: getLogoUrl(company),
+    skills:   props.Skills?.multi_select?.map((s: { name: string }) => s.name) ?? [],
+    year:     props.Year?.number ?? new Date().getFullYear(),
+    cover:    page.cover?.external?.url ?? page.cover?.file?.url ?? "",
+    logoUrl:  getLogoUrl(company),
   };
 }

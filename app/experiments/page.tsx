@@ -1,7 +1,10 @@
 import type { Metadata } from "next";
 import { AnimatedSection } from "@/components/AnimatedSection";
-import Image from "next/image";
+import { CaseStudyCard } from "@/components/CaseStudyCard";
+import { getExperiments } from "@/lib/notion";
 import Link from "next/link";
+
+export const revalidate = 60;
 
 export const metadata: Metadata = {
   title: "Experiments",
@@ -9,29 +12,9 @@ export const metadata: Metadata = {
     "Side projects, creative explorations, and things I built just because I wanted to see if I could.",
 };
 
-/*
-  To add experiments to Notion later:
-  1. Open your Notion "Case Studies" database
-  2. Add a new "Select" property called "Category" with options: "Case Study", "Experiment"
-  3. Set existing entries to Category = "Case Study"
-  4. Add new entries with Category = "Experiment" and Status = "Published"
-  5. Update lib/notion.ts to add a getExperiments() function that filters
-     by Status = "Published" AND Category = "Experiment"
-*/
+export default async function ExperimentsPage() {
+  const experiments = await getExperiments();
 
-const EXPERIMENTS = [
-  {
-    slug: "creaamos",
-    title: "CreamOS",
-    company: "Creamwala",
-    logoUrl: "",
-    cover: "",
-    description:
-      "An experimental internal operating system for managing Creamwala's brand, flavors, and drop schedule — built as a single-page design exploration.",
-  },
-];
-
-export default function ExperimentsPage() {
   return (
     <div className="min-h-screen bg-white dark:bg-black">
       <div className="max-w-content mx-auto px-6">
@@ -50,51 +33,27 @@ export default function ExperimentsPage() {
         </section>
 
         {/* ── Cards ── */}
-        <section className="py-10 pb-24 flex flex-col gap-16">
-          {EXPERIMENTS.map((exp, i) => (
-            <AnimatedSection key={exp.slug} delay={i * 0.06}>
-              <article>
-                {/* Cover */}
-                <div className="relative w-full aspect-[2/1] overflow-hidden rounded-3xl bg-[#d9d9d9] dark:bg-runway-surface mb-5">
-                  {exp.cover && (
-                    <Image
-                      src={exp.cover}
-                      fill
-                      alt={exp.title}
-                      className="object-cover"
-                      sizes="850px"
-                    />
-                  )}
-                </div>
-
-                {/* Company */}
-                <div className="flex items-center gap-2.5 mb-2.5">
-                  {exp.logoUrl ? (
-                    <Image
-                      src={exp.logoUrl}
-                      width={22}
-                      height={22}
-                      alt={exp.company}
-                      className="rounded object-contain"
-                    />
-                  ) : (
-                    <div className="w-[22px] h-[22px] rounded bg-[#d9d9d9] dark:bg-runway-surface flex-shrink-0" />
-                  )}
-                  <span className="text-[14px] font-medium text-[#525252] dark:text-runway-slate">
-                    {exp.company}
-                  </span>
-                </div>
-
-                {/* Title + description */}
-                <h2 className="text-[32px] font-medium text-black dark:text-white leading-[1.2] tracking-[-0.02em] mb-3">
-                  {exp.title}
-                </h2>
-                <p className="text-[18px] text-[#525252] dark:text-runway-slate leading-[1.6] max-w-[600px]">
-                  {exp.description}
+        <section className="py-10 pb-24">
+          {experiments.length === 0 ? (
+            <AnimatedSection>
+              <div className="py-16 text-center">
+                <p className="text-[16px] text-[#525252] dark:text-runway-slate">
+                  No experiments published yet. In Notion, set{" "}
+                  <code className="text-black dark:text-white">Category = Experiment</code>{" "}
+                  and{" "}
+                  <code className="text-black dark:text-white">Status = Published</code>.
                 </p>
-              </article>
+              </div>
             </AnimatedSection>
-          ))}
+          ) : (
+            <div className="flex flex-col gap-16">
+              {experiments.map((exp, i) => (
+                <AnimatedSection key={exp.id} delay={i * 0.06}>
+                  <CaseStudyCard study={exp} />
+                </AnimatedSection>
+              ))}
+            </div>
+          )}
         </section>
 
         {/* ── Footer ── */}
