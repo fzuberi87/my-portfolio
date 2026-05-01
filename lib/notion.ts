@@ -5,6 +5,23 @@ const notion = new Client({ auth: process.env.NOTION_SECRET });
 const DATABASE_ID = process.env.NOTION_DATABASE_ID!;
 
 // ---------------------------------------------------------------------------
+// Company logo map — Clearbit logos by lowercase company name
+// ---------------------------------------------------------------------------
+
+const LOGO_MAP: Record<string, string> = {
+  "allata":                  "https://logo.clearbit.com/allata.com",
+  "redfin":                  "https://logo.clearbit.com/redfin.com",
+  "redfin home services":    "https://logo.clearbit.com/redfin.com",
+  "intuit":                  "https://logo.clearbit.com/intuit.com",
+  "caris life sciences":     "https://logo.clearbit.com/carislifesciences.com",
+  "riwayat house (self published)": "",
+};
+
+function getLogoUrl(company: string): string {
+  return LOGO_MAP[company.toLowerCase()] ?? "";
+}
+
+// ---------------------------------------------------------------------------
 // Slug helpers
 // ---------------------------------------------------------------------------
 
@@ -75,16 +92,18 @@ export async function getCaseStudyBlocks(pageId: string): Promise<NotionBlock[]>
 function formatCaseStudy(page: any): CaseStudy {
   const props = page.properties;
   const title: string = props.Name?.title?.[0]?.plain_text ?? "Untitled";
+  const company: string = props.Company?.rich_text?.[0]?.plain_text ?? "";
 
   return {
     id: page.id,
     slug: toSlug(title),
     title,
-    company: props.Company?.rich_text?.[0]?.plain_text ?? "",
+    company,
     role: props.Role?.rich_text?.[0]?.plain_text ?? "",
     industry: props.Industry?.select?.name ?? "",
     skills: props.Skills?.multi_select?.map((s: { name: string }) => s.name) ?? [],
     year: props.Year?.number ?? new Date().getFullYear(),
     cover: page.cover?.external?.url ?? page.cover?.file?.url ?? "",
+    logoUrl: getLogoUrl(company),
   };
 }

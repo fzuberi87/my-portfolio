@@ -8,6 +8,7 @@ export interface CaseStudy {
   skills: string[];
   year: number;
   cover: string;
+  logoUrl: string;
 }
 
 export interface RichTextItem {
@@ -23,9 +24,6 @@ export interface RichTextItem {
   };
 }
 
-// Minimal typed shell around the Notion API's discriminated block union.
-// The `[key: string]: any` index signature lets us access block-specific
-// fields (e.g. block.paragraph.rich_text) after narrowing on `type`.
 export interface NotionBlock {
   id: string;
   type: string;

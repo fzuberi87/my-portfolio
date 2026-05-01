@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import './globals.css';
 import { Header } from '@/components/Header';
+import { ThemeProvider } from '@/components/ThemeProvider';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -11,27 +12,26 @@ const inter = Inter({
 
 export const metadata: Metadata = {
   title: {
-    default: 'Portfolio – UX Designer',
-    template: '%s – Portfolio',
+    default: 'Faiz Zuberi — Product Designer',
+    template: '%s — Faiz Zuberi',
   },
   description:
-    'Senior UX Designer crafting intuitive digital products and thoughtful user experiences.',
+    'Product designer with 12+ years of experience across brand and product, from tech to ice cream.',
   openGraph: {
     type: 'website',
     locale: 'en_US',
-    siteName: 'UX Portfolio',
-  },
-  twitter: {
-    card: 'summary_large_image',
+    siteName: 'Faiz Zuberi',
   },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={inter.variable}>
-      <body className="antialiased">
-        <Header />
-        <main>{children}</main>
+    <html lang="en" className={inter.variable} suppressHydrationWarning>
+      <body className="antialiased bg-white dark:bg-black text-black dark:text-white transition-colors duration-200">
+        <ThemeProvider>
+          <Header />
+          <main>{children}</main>
+        </ThemeProvider>
       </body>
     </html>
   );

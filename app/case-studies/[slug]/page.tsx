@@ -36,7 +36,6 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function CaseStudyPage({ params }: Props) {
   const { slug } = await params;
-
   const study = await getCaseStudyBySlug(slug);
   if (!study) notFound();
 
@@ -44,47 +43,39 @@ export default async function CaseStudyPage({ params }: Props) {
 
   const meta = [
     { label: "Company", value: study.company },
-    { label: "Role", value: study.role },
+    { label: "Role",    value: study.role },
     { label: "Industry", value: study.industry },
-    { label: "Year", value: study.year ? String(study.year) : "" },
+    { label: "Year",    value: study.year ? String(study.year) : "" },
   ].filter((m) => m.value);
 
   return (
-    <div className="min-h-screen bg-runway-black">
-      {/* ── Top bar ── */}
-      <div className="fixed top-0 left-0 right-0 z-50 bg-black/80 backdrop-blur-xl border-b border-runway-border">
-        <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
+    <div className="min-h-screen bg-white dark:bg-black">
+      {/* ── Back bar (replaces the main header on this page) ── */}
+      <div className="fixed top-0 left-0 right-0 z-50 bg-white/90 dark:bg-black/90 backdrop-blur-xl border-b border-[#e5e5e5] dark:border-runway-border">
+        <div className="max-w-content mx-auto px-6 h-[60px] flex items-center justify-between">
           <Link
             href="/"
-            className="group inline-flex items-center gap-2 text-sm text-runway-slate hover:text-white transition-colors duration-200"
+            className="group inline-flex items-center gap-2 text-sm text-[#525252] dark:text-runway-slate hover:text-black dark:hover:text-white transition-colors"
           >
             <svg
-              width="16"
-              height="16"
-              viewBox="0 0 16 16"
-              fill="none"
+              width="16" height="16" viewBox="0 0 16 16" fill="none"
               className="group-hover:-translate-x-0.5 transition-transform duration-200"
             >
-              <path
-                d="M10 3L5 8l5 5"
-                stroke="currentColor"
-                strokeWidth="1.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
+              <path d="M10 3L5 8l5 5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
             </svg>
             All work
           </Link>
-
           {study.industry && (
-            <p className="text-label">{study.industry}</p>
+            <span className="text-label text-[#525252] dark:text-runway-slate">
+              {study.industry}
+            </span>
           )}
         </div>
       </div>
 
-      {/* ── Cover image — full-bleed cinematic ── */}
+      {/* ── Cover image — full bleed ── */}
       {study.cover ? (
-        <div className="relative w-full h-[55vh] min-h-[360px] pt-16">
+        <div className="relative w-full h-[55vh] min-h-[360px] pt-[60px]">
           <Image
             src={study.cover}
             fill
@@ -93,40 +84,36 @@ export default async function CaseStudyPage({ params }: Props) {
             priority
             sizes="100vw"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-t from-white dark:from-black via-transparent to-transparent" />
         </div>
       ) : (
-        <div className="pt-16 h-24" />
+        <div className="h-[60px]" />
       )}
 
-      {/* ── Header ── */}
-      <div
-        className={`max-w-3xl mx-auto px-6 ${
-          study.cover ? "relative -mt-20" : "pt-16"
-        }`}
-      >
+      {/* ── Content ── */}
+      <div className={`max-w-content mx-auto px-6 ${study.cover ? "relative -mt-16" : "pt-10"}`}>
         <AnimatedSection>
-          <h1 className="text-section text-white leading-tight tracking-[-0.03em] mb-7">
+          <h1 className="text-[clamp(2rem,5vw,3.25rem)] font-medium text-black dark:text-white leading-[1.15] tracking-[-0.025em] mb-7">
             {study.title}
           </h1>
 
-          {/* Meta grid */}
+          {/* Meta */}
           {meta.length > 0 && (
-            <div className="flex flex-wrap gap-x-8 gap-y-5 py-7 border-y border-runway-border mb-0">
+            <div className="flex flex-wrap gap-x-8 gap-y-5 py-7 border-y border-[#e5e5e5] dark:border-runway-border">
               {meta.map(({ label, value }) => (
                 <div key={label}>
-                  <p className="text-label mb-1.5">{label}</p>
-                  <p className="text-[14px] font-medium text-white">{value}</p>
+                  <p className="text-label text-[#999] dark:text-runway-footer mb-1.5">{label}</p>
+                  <p className="text-[14px] font-medium text-black dark:text-white">{value}</p>
                 </div>
               ))}
               {study.skills.length > 0 && (
                 <div>
-                  <p className="text-label mb-1.5">Skills</p>
+                  <p className="text-label text-[#999] dark:text-runway-footer mb-1.5">Skills</p>
                   <div className="flex flex-wrap gap-1.5">
                     {study.skills.map((skill) => (
                       <span
                         key={skill}
-                        className="text-[11px] font-medium text-runway-muted border border-runway-border px-2.5 py-1 rounded"
+                        className="text-[11px] font-medium text-[#525252] dark:text-runway-muted border border-[#e5e5e5] dark:border-runway-border px-2.5 py-1 rounded"
                       >
                         {skill}
                       </span>
@@ -138,26 +125,20 @@ export default async function CaseStudyPage({ params }: Props) {
           )}
         </AnimatedSection>
 
-        {/* ── Block content ── */}
+        {/* Blocks */}
         <AnimatedSection delay={0.12} className="pt-10 pb-20">
           <NotionBlocks blocks={blocks} />
         </AnimatedSection>
 
-        {/* ── Back CTA ── */}
-        <AnimatedSection className="pb-20 border-t border-runway-border pt-12">
+        {/* Back CTA */}
+        <AnimatedSection className="pb-20 border-t border-[#e5e5e5] dark:border-runway-border pt-12">
           <Link
             href="/"
-            className="group inline-flex items-center gap-3 text-sm text-runway-slate hover:text-white transition-colors duration-200"
+            className="group inline-flex items-center gap-3 text-sm text-[#525252] dark:text-runway-slate hover:text-black dark:hover:text-white transition-colors"
           >
-            <span className="inline-flex items-center justify-center w-9 h-9 rounded border border-runway-border group-hover:border-runway-muted transition-colors">
+            <span className="inline-flex items-center justify-center w-9 h-9 rounded border border-[#e5e5e5] dark:border-runway-border group-hover:border-[#525252] dark:group-hover:border-runway-muted transition-colors">
               <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-                <path
-                  d="M9 2L4 7l5 5"
-                  stroke="currentColor"
-                  strokeWidth="1.5"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
+                <path d="M9 2L4 7l5 5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
               </svg>
             </span>
             Back to all work
